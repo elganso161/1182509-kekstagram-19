@@ -6,6 +6,12 @@ var OBJECTS = 25;
 
 var usersPictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+document.querySelector('.big-picture').classList.remove('hidden');
+document.querySelector('.social__comment-count').classList.add('hidden');
+document.querySelector('.comments-loader').classList.add('hidden');
+document.querySelector('body').classList.add('modal-open');
+
+
 
 function getRandomInt(min, max) {
   min = Math.ceil(min);
@@ -27,6 +33,7 @@ function getComments() {
 
   return arrayOfComments;
 }
+
 
 function generateMessage(array) {
   var arrayMessages = array.slice();
@@ -57,6 +64,7 @@ function createArrayOfObjects(countObjects) {
 
 var pictures = createArrayOfObjects(OBJECTS);
 
+
 var createPicture = function (picture) {
   var pictureElement = pictureTemplate.cloneNode(true);
 
@@ -67,10 +75,13 @@ var createPicture = function (picture) {
   return pictureElement;
 };
 
+
 var fragment = document.createDocumentFragment();
 
 for (var i = 0; i < pictures.length; i++) {
   fragment.appendChild(createPicture(pictures[i]));
 }
 
+
 usersPictures.appendChild(fragment);
+
