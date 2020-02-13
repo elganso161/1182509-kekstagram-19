@@ -7,6 +7,12 @@ var OBJECTS = 25;
 var usersPictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
+document.querySelector('.social__comment-count').classList.add('hidden');
+document.querySelector('.comments-loader').classList.add('hidden');
+document.querySelector('body').classList.add('modal-open');
+document.querySelector('.big-picture').classList.remove('hidden');
+
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -27,6 +33,7 @@ function getComments() {
 
   return arrayOfComments;
 }
+
 
 function generateMessage(array) {
   var arrayMessages = array.slice();
@@ -73,4 +80,59 @@ for (var i = 0; i < pictures.length; i++) {
   fragment.appendChild(createPicture(pictures[i]));
 }
 
+
 usersPictures.appendChild(fragment);
+
+
+function renderPictureElements() {
+  for (i = 0; i < pictures.length; i++) {
+    fragment.appendChild(createPicture(pictures[i]));
+  }
+}
+
+renderPictureElements();
+
+var picturesList = document.querySelector('.pictures');
+picturesList.appendChild(fragment);
+
+var bigPicture = document.querySelector('.big-picture');
+var bigPictureImage = bigPicture.querySelector('.big-picture__img');
+var bigPictureCaption = bigPicture.querySelector('.social__caption');
+var bigPictureLikesCount = bigPicture.querySelector('.likes-count');
+var bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
+var bigPictureCommentsBlock = bigPicture.querySelector('.social__comments');
+bigPicture.classList.remove('hidden');
+
+var commentTemplate = bigPictureCommentsBlock.querySelector('.social__comment');
+
+
+function createComment(photo) {
+  var comment = commentTemplate.cloneNode(true);
+  var picture = comment.querySelector('.social__picture');
+  var commentContent = comment.querySelector('.social__text');
+
+  picture.src = photo.url;
+  picture.alt = photo.comments[0].name;
+  commentContent.textContent = photo.comments[0].message;
+
+  return comment;
+}
+
+
+function renderOpenedPicture(picture) {
+  bigPictureImage.src = pictures.url;
+  bigPictureCaption.textContent = picture.description;
+  bigPictureLikesCount.textContent = picture.likes;
+  bigPictureCommentsCount.textContent = picture.comments.length;
+  bigPictureCommentsBlock.appendChild(createComment(picture));
+}
+
+renderOpenedPicture(pictures[0]);
+
+var commentsCount = bigPicture.querySelector('.social__comment-count');
+commentsCount.classList.add('hidden');
+
+var commentsLoader = bigPicture.querySelector('.comments-loader');
+commentsLoader.classList.add('hidden');
+
+document.body.classList.add('modal-open');
