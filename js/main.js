@@ -68,6 +68,7 @@ var createPicture = function (picture) {
   pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
 
   return pictureElement;
+
 };
 
 var fragment = document.createDocumentFragment();
@@ -124,6 +125,7 @@ function renderOpenedPicture(picture) {
 }
 
 renderOpenedPicture(pictures[0]);
+
 
 var commentsCount = bigPicture.querySelector('.social__comment-count');
 commentsCount.classList.add('hidden');
@@ -328,3 +330,37 @@ modalHash.addEventListener('input', function (evt) {
   target.setCustomValidity(invalidMessage.join('\n'));
 
 });
+
+// Добавляет возможность просмотра любой фотографии в полноразмерном режиме;
+var thumbnails = document.querySelectorAll('.picture__img');
+// var bigPicture = document.querySelector('.big-picture');
+var closeBigPicture = document.querySelector('.big-picture__cancel');
+
+var addThumbnailClickHandler = function (thumbnail, picture) {
+  thumbnail.addEventListener('click', function () {
+    bigPicture.src = picture;
+    bigPicture.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+  });
+  closeBigPicture.addEventListener('click', function () {
+    bigPicture.classList.add('hidden');
+  });
+  closeBigPicture.addEventListener('click', function () {
+    document.body.classList.remove('modal-open');
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      bigPicture.classList.add('hidden');
+    }
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      document.body.classList.remove('modal-open');
+    }
+  });
+};
+
+for (i = 0; i < thumbnails.length; i++) {
+  addThumbnailClickHandler(thumbnails[i], pictures[i]);
+}
+
