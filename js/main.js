@@ -4,6 +4,7 @@ var MESSAGES = ['Всё отлично!', 'В целом всё неплохо. 
 var NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var OBJECTS = 25;
 var ESC_KEY = 'Escape';
+var ENTER_KEY = 'Enter';
 
 var usersPictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
@@ -73,16 +74,12 @@ var createPicture = function (picture) {
 
 var fragment = document.createDocumentFragment();
 
-for (var i = 0; i < pictures.length; i++) {
-  fragment.appendChild(createPicture(pictures[i]));
-}
-
 
 usersPictures.appendChild(fragment);
 
 
 function renderPictureElements() {
-  for (i = 0; i < pictures.length; i++) {
+  for (var i = 0; i < pictures.length; i++) {
     fragment.appendChild(createPicture(pictures[i]));
   }
 }
@@ -93,7 +90,7 @@ var picturesList = document.querySelector('.pictures');
 picturesList.appendChild(fragment);
 
 var bigPicture = document.querySelector('.big-picture');
-var bigPictureImage = bigPicture.querySelector('.big-picture__img');
+var bigPictureImage = bigPicture.querySelector('.big-picture__img img');
 var bigPictureCaption = bigPicture.querySelector('.social__caption');
 var bigPictureLikesCount = bigPicture.querySelector('.likes-count');
 var bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
@@ -117,7 +114,7 @@ function createComment(photo) {
 
 
 function renderOpenedPicture(picture) {
-  bigPictureImage.src = pictures.url;
+  bigPictureImage.src = picture.url;
   bigPictureCaption.textContent = picture.description;
   bigPictureLikesCount.textContent = picture.likes;
   bigPictureCommentsCount.textContent = picture.comments.length;
@@ -125,6 +122,46 @@ function renderOpenedPicture(picture) {
 }
 
 renderOpenedPicture(pictures[0]);
+
+// Добавляет возможность просмотра любой фотографии в полноразмерном режиме;
+var thumbnails = document.querySelectorAll('.picture__img');
+var closeBigPicture = document.querySelector('.big-picture__cancel');
+
+
+var addThumbnailClickHandler = function (thumbnail, picture) {
+  thumbnail.addEventListener('click', function () {
+    bigPictureImage.src = picture.url;
+    bigPicture.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+  });
+  thumbnail.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      bigPictureImage.src = picture.url;
+      bigPicture.classList.remove('hidden');
+      document.body.classList.add('modal-open');
+    }
+  });
+  closeBigPicture.addEventListener('click', function () {
+    bigPicture.classList.add('hidden');
+  });
+  closeBigPicture.addEventListener('click', function () {
+    document.body.classList.remove('modal-open');
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      bigPicture.classList.add('hidden');
+    }
+  });
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      document.body.classList.remove('modal-open');
+    }
+  });
+};
+
+for (i = 0; i < thumbnails.length; i++) {
+  addThumbnailClickHandler(thumbnails[i], pictures[i]);
+}
 
 
 var commentsCount = bigPicture.querySelector('.social__comment-count');
@@ -216,7 +253,7 @@ var effects = document.querySelectorAll('.effects__label');
 var imgEffect = imgUploadPreview.querySelector('img');
 
 
-for (i = 0; i < effects.length; i++) {
+for (var i = 0; i < effects.length; i++) {
 
   effects[i].addEventListener('click', function (evt) {
     var newEffect = evt.target.classList.item(1);
@@ -330,37 +367,4 @@ modalHash.addEventListener('input', function (evt) {
   target.setCustomValidity(invalidMessage.join('\n'));
 
 });
-
-// Добавляет возможность просмотра любой фотографии в полноразмерном режиме;
-var thumbnails = document.querySelectorAll('.picture__img');
-// var bigPicture = document.querySelector('.big-picture');
-var closeBigPicture = document.querySelector('.big-picture__cancel');
-
-var addThumbnailClickHandler = function (thumbnail, picture) {
-  thumbnail.addEventListener('click', function () {
-    bigPicture.src = picture;
-    bigPicture.classList.remove('hidden');
-    document.body.classList.add('modal-open');
-  });
-  closeBigPicture.addEventListener('click', function () {
-    bigPicture.classList.add('hidden');
-  });
-  closeBigPicture.addEventListener('click', function () {
-    document.body.classList.remove('modal-open');
-  });
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === ESC_KEY) {
-      bigPicture.classList.add('hidden');
-    }
-  });
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === ESC_KEY) {
-      document.body.classList.remove('modal-open');
-    }
-  });
-};
-
-for (i = 0; i < thumbnails.length; i++) {
-  addThumbnailClickHandler(thumbnails[i], pictures[i]);
-}
 
