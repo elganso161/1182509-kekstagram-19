@@ -31,7 +31,6 @@ function getComments() {
   return arrayOfComments;
 }
 
-
 function generateMessage(array) {
   var arrayMessages = array.slice();
   if (getRandomInt(0, 1) === 0) {
@@ -95,7 +94,6 @@ var bigPictureCaption = bigPicture.querySelector('.social__caption');
 var bigPictureLikesCount = bigPicture.querySelector('.likes-count');
 var bigPictureCommentsCount = bigPicture.querySelector('.comments-count');
 var bigPictureCommentsBlock = bigPicture.querySelector('.social__comments');
-// bigPicture.classList.remove('hidden');
 
 var commentTemplate = bigPictureCommentsBlock.querySelector('.social__comment');
 
@@ -105,13 +103,13 @@ function createComment(photo) {
   var picture = comment.querySelector('.social__picture');
   var commentContent = comment.querySelector('.social__text');
 
+
   picture.src = photo.url;
   picture.alt = photo.comments[0].name;
   commentContent.textContent = photo.comments[0].message;
 
   return comment;
 }
-
 
 function renderOpenedPicture(picture) {
   bigPictureImage.src = picture.url;
@@ -126,7 +124,6 @@ renderOpenedPicture(pictures[0]);
 // Добавляет возможность просмотра любой фотографии в полноразмерном режиме;
 var thumbnails = document.querySelectorAll('.picture__img');
 var closeBigPicture = document.querySelector('.big-picture__cancel');
-
 
 var addThumbnailClickHandler = function (thumbnail, picture) {
   thumbnail.addEventListener('click', function () {
@@ -152,11 +149,11 @@ var addThumbnailClickHandler = function (thumbnail, picture) {
       bigPicture.classList.add('hidden');
     }
   });
-  document.addEventListener('keydown', function (evt) {
-    if (evt.key === ESC_KEY) {
-      document.body.classList.remove('modal-open');
-    }
-  });
+  // document.addEventListener('keydown', function (evt) {
+  //   if (evt.key === ESC_KEY) {
+  //     document.body.classList.remove('modal-open');
+  //   }
+  // });
 };
 
 for (i = 0; i < thumbnails.length; i++) {
@@ -188,17 +185,12 @@ closeUploadOverlay.addEventListener('click', function () {
 document.addEventListener('keydown', function (evt) {
   if (evt.key === ESC_KEY) {
     imgUploadOverlay.classList.add('hidden');
+    document.body.classList.remove('modal-open');
   }
 });
 
 closeUploadOverlay.addEventListener('click', function () {
   document.body.classList.remove('modal-open');
-});
-
-document.addEventListener('keydown', function (evt) {
-  if (evt.key === ESC_KEY) {
-    document.body.classList.remove('modal-open');
-  }
 });
 
 
@@ -295,10 +287,20 @@ for (var i = 0; i < effects.length; i++) {
   });
 }
 
+
 // Валидация хеш-тегов
 var modalHash = document.querySelector('.text__hashtags');
 var maxHashtags = 5;
 var maxSymbols = 20;
+
+modalHash.addEventListener('focus', function () {
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === ESC_KEY) {
+      evt.preventDefault();
+    }
+  });
+});
+
 
 modalHash.addEventListener('input', function (evt) {
   var invalidMessage = [];
