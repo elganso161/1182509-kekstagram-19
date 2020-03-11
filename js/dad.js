@@ -3,68 +3,66 @@
 (function () {
   var lineRange = document.querySelector('.effect-level__line');
   var pinRange = document.querySelector('.effect-level__pin');
-  // var effectLevel = document.querySelector('.effect-level__depth');
+  var effectLevel = document.querySelector('.effect-level__depth');
 
-  pinRange.onmousedown = evt => {
-    var value = evt.pageX - lineRange.offsetLeft - (pinRange.offsetWidth / 2);
-    var moveAt = value => {
-      pinRange.style.left = value + 'px';
-    }
-    document.onmousemove = evt => {
-        value = evt.pageX - lineRange.offsetLeft - (pinRange.offsetWidth / 2);
-        if(value > 0 && value < 450 ){
-            moveAt(value);
-        }else{
-            moveAt(value>0?450:0);
-        }
-    }
-      document.onmouseup = () => {
-        document.onmousemove = null;
-        pinRange.onmouseup = null;
-    }
-}
 
-  // pinRange.addEventListener('mousedown', function (evt) {
-  //   evt.preventDefault();
+  pinRange.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
 
-  //   var startCoords = {
-  //     x: evt.clientX
-  //   };
 
-  //   var dragged = false;
+    var shiftX = evt.clientX - pinRange.getBoundingClientRect().left;
 
-  //   var MouseMoveHendler = function (moveEvt) {
-  //     moveEvt.preventDefault();
 
-  //     dragged = true;
+    var startCoords = {
+      x: evt.clientX
+    };
 
-  //     var shift = {
-  //       x: startCoords.x - moveEvt.clientX
-  //     };
+    var dragged = false;
 
-  //     startCoords = {
-  //       x: moveEvt.clientX
-  //     };
-  //     pinRange.style.left = (pinRange.offsetLeft - shift.x) + 'px';
-  //   };
+    var MouseMoveHendler = function (moveEvt) {
+      moveEvt.preventDefault();
 
-  //   var MouseUpHendler = function (upEvt) {
-  //     upEvt.preventDefault();
+      var newLeft = moveEvt.clientX - shiftX - lineRange.getBoundingClientRect().left;
+      if (newLeft < 0) {
+        newLeft = 0;
+      }
+      var rightEdge = lineRange.offsetWidth - pinRange.offsetWidth;
+      if (newLeft > rightEdge) {
+        newLeft = rightEdge;
+      }
 
-  //     document.removeEventListener('mousemove', MouseMoveHendler);
-  //     // document.removeEventListener('mouseup', MouseUpHendler);
+      pinRange.style.left = newLeft + 'px';
 
-  //     if (dragged) {
-  //       var clickPreventDefaultHendler = function (clickEvt) {
-  //         clickEvt.preventDefault();
-  //         lineRange.removeEventListener('click', clickPreventDefaultHendler);
-  //       };
-  //       lineRange.addEventListener('click', clickPreventDefaultHendler);
-  //     }
-  //   };
+      dragged = true;
 
-  //   document.addEventListener('mousemove', MouseMoveHendler);
-  //   document.addEventListener('mouseup', MouseUpHendler);
-  // });
+      var shift = {
+        x: startCoords.x - moveEvt.clientX
+      };
+
+      startCoords = {
+        x: moveEvt.clientX
+      };
+      pinRange.style.left = (pinRange.offsetLeft - shift.x) + 'px';
+      effectLevel.style.width = pinRange.offsetLeft + 'px';
+    };
+
+    var MouseUpHendler = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', MouseMoveHendler);
+      document.removeEventListener('mouseup', MouseUpHendler);
+
+      if (dragged) {
+        var clickPreventDefaultHendler = function (clickEvt) {
+          clickEvt.preventDefault();
+          lineRange.removeEventListener('click', clickPreventDefaultHendler);
+        };
+        lineRange.addEventListener('click', clickPreventDefaultHendler);
+      }
+    };
+
+    document.addEventListener('mousemove', MouseMoveHendler);
+    document.addEventListener('mouseup', MouseUpHendler);
+  });
 })();
 
