@@ -1,11 +1,17 @@
 'use strict';
 
 (function () {
-  var dialogHandler = document.querySelector('.effect-level__line');
-  var setup = document.querySelector('.effect-level__pin');
+  var lineRange = document.querySelector('.effect-level__line');
+  var pinRange = document.querySelector('.effect-level__pin');
+  var effectLevel = document.querySelector('.effect-level__depth');
 
-  dialogHandler.addEventListener('mousedown', function (evt) {
+
+  pinRange.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
+
+
+    var shiftX = evt.clientX - pinRange.getBoundingClientRect().left;
+
 
     var startCoords = {
       x: evt.clientX
@@ -16,6 +22,17 @@
     var MouseMoveHendler = function (moveEvt) {
       moveEvt.preventDefault();
 
+      var newLeft = moveEvt.clientX - shiftX - lineRange.getBoundingClientRect().left;
+      if (newLeft < 0) {
+        newLeft = 0;
+      }
+      var rightEdge = lineRange.offsetWidth - pinRange.offsetWidth;
+      if (newLeft > rightEdge) {
+        newLeft = rightEdge;
+      }
+
+      pinRange.style.left = newLeft + 'px';
+
       dragged = true;
 
       var shift = {
@@ -25,7 +42,8 @@
       startCoords = {
         x: moveEvt.clientX
       };
-      setup.style.left = (setup.offsetLeft - shift.x) + 'px';
+      pinRange.style.left = (pinRange.offsetLeft - shift.x) + 'px';
+      effectLevel.style.width = pinRange.offsetLeft + 'px';
     };
 
     var MouseUpHendler = function (upEvt) {
@@ -37,9 +55,9 @@
       if (dragged) {
         var clickPreventDefaultHendler = function (clickEvt) {
           clickEvt.preventDefault();
-          dialogHandler.removeEventListener('click', clickPreventDefaultHendler);
+          lineRange.removeEventListener('click', clickPreventDefaultHendler);
         };
-        dialogHandler.addEventListener('click', clickPreventDefaultHendler);
+        lineRange.addEventListener('click', clickPreventDefaultHendler);
       }
     };
 
@@ -47,3 +65,4 @@
     document.addEventListener('mouseup', MouseUpHendler);
   });
 })();
+
