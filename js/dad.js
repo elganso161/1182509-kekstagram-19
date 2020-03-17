@@ -22,13 +22,17 @@
     var MouseMoveHendler = function (moveEvt) {
       moveEvt.preventDefault();
 
+      var canDrag = true;
       var newLeft = moveEvt.clientX - shiftX - lineRange.getBoundingClientRect().left;
-      if (newLeft < 0) {
-        newLeft = 0;
-      }
       var rightEdge = lineRange.offsetWidth - pinRange.offsetWidth;
-      if (newLeft > rightEdge) {
+      if (newLeft <= 0) {
+        newLeft = 0;
+        canDrag = false;
+      } else if (newLeft >= rightEdge) {
         newLeft = rightEdge;
+        canDrag = false;
+      } else {
+        canDrag = true;
       }
 
       pinRange.style.left = newLeft + 'px';
