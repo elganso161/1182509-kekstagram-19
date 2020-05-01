@@ -1,3 +1,4 @@
+https://elganso161.github.io/kekstagram/.
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Игорь](https://up.htmlacademy.ru/javascript/19/user/1182509).
